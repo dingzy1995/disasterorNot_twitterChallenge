@@ -16,6 +16,10 @@ import pandas as pd
 import re
 import argparse
 from wordcloud import WordCloud
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+
+stop_words = set(stopwords.words('english'))
 
 args = argparse.ArgumentParser(description='Program description.')
 args.add_argument('-a','--address', default='train.csv', help='the address of the file to be process')
@@ -29,11 +33,17 @@ def read_data(address):
     df['text']=df['text'].map(lambda x: re.sub('\Z','',x))
     df['text'].str.lower()
     content=','.join(list(df['text'].values))
-    
+    #tokenize the tweets
+    content_token = word_tokenize(content)
+    filtered_content=[]
+    for w in content_token:
+        if w not in stop_words:
+            filtered_content.append(w)
+    filtered_tweet=','.join(filtered_content)
     wordcloud=WordCloud(background_color="white", max_words=5000, contour_width=3, 
                         contour_color='steelblue')
-    wordcloud.generate(content)
-    wordcloud.to_file('first_wordcloud.png')
+    wordcloud.generate(filtered_tweet)
+    wordcloud.to_file('wordcloud.png')
 
 def main():
     read_data(args.address)
