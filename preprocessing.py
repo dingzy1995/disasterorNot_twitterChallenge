@@ -46,7 +46,6 @@ def as_list(address):
                     word_list.append(stemmer.stem(WordNetLemmatizer().lemmatize(token, pos='v')))
             result.append(word_list)
         df['text_list']=result
-        print(result[0])
     return df
 
 def main():
