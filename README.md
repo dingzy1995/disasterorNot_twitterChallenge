@@ -1,4 +1,8 @@
 ###### This is a final project of COSC 572
+Arguements are avaliable to use for some of the scripts. Default values are set so all of them can be run with
+'''
+python name_of_the_script.py
+'''
 
 ###### Packages that we used in this project:
 - emoji
