@@ -24,7 +24,7 @@ from keras.optimizers import Adam
 args = argparse.ArgumentParser(description='Program description.')
 args.add_argument('-a','--address', default='train.csv', help='the address of the file to be process')
 args.add_argument('-t','--test', default='test.csv', help='the address of the test file')
-args.add_argument('-e', '--embedding_size', default=100, type=int, help='Embedding dimension size')
+args.add_argument('-e', '--embedding_size', default=200, type=int, help='Embedding dimension size')
 args.add_argument('-nf', '--number_features', default=15000, type=int, help='max length of features')
 args.add_argument('-g', '--glove_file', default='glove.twitter.27B\glove.twitter.27B.200d.txt', type=str, help="glove document address")
 args.add_argument('-d', '--dropout', default=0.25, type=float)
@@ -139,7 +139,7 @@ def glove_method(train_df, test_df):
             embedding_metrix[w]=vec
             
     n_words=len(tokenizer.word_index)+1
-    embedding_matrix=np.zeros((n_words, 200))
+    embedding_matrix=np.zeros((n_words, args.embedding_size))
     
     for word, i in tokenizer.word_index.items():
         if i<n_words:
@@ -150,14 +150,14 @@ def glove_method(train_df, test_df):
     
     model=Sequential()
     embedding_layer=Embedding(n_words,
-                              200,
+                              args.embedding_size,
                               embeddings_initializer=Constant(embedding_matrix),
                               input_length=50,
                               trainable=False)
     model.add(embedding_layer)
     model.add(SpatialDropout1D(args.dropout))
-    model.add(Bidirectional(LSTM(200, dropout=args.dropout, recurrent_dropout=args.dropout)))
-    model.add(Dense(125, activation='sigmoid'))
+    model.add(Bidirectional(LSTM(args.embedding_size, dropout=args.dropout, recurrent_dropout=args.dropout)))
+    model.add(Dense(128, activation='sigmoid'))
     model.add(Dropout(args.dropout))
     #model.add(LSTM(100, dropout=args.dropout))
     model.add(Dense(1, activation='sigmoid'))
