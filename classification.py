@@ -43,21 +43,15 @@ def feature_engineering(df):
     """
     #word count
     df['word_count']=df['text_list'].apply(lambda x: len(x))
-    
     #unique words
     df['unique_word']=df['text_list'].apply(lambda x: len(set(x)))
-    
     #url
     df['url']=df['text'].apply(lambda x: 
         len(re.findall('(https?|ftp)://', x)))
-        
     #hashtag
     df['hashtag']=df['text'].apply(lambda x: len([t for t in str(x) if t=='#']))
-      
     #at
     df['at']=df['text'].apply(lambda x: len([t for t in str(x) if t=='@']))
-                         
-    
     return df
 
 def cleaning_for_glove(df):
@@ -117,7 +111,6 @@ def test_glove(df):
 
 def generate_dicts():
     #unigram
-    
     for index, row in df.iterrows():
         if(row['target']==1):
             for token in row['text_list']:
