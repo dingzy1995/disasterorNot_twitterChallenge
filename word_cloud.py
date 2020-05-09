@@ -11,7 +11,7 @@ part of the code in this script is learnt from Shashank Kapadia's article
 https://towardsdatascience.com/end-to-end-topic-modeling-in-python-latent-dirichlet-allocation-lda-35ce4ed6b3e0
 
 """
-
+import preprocessing
 import pandas as pd
 import re
 import argparse
@@ -25,25 +25,32 @@ args = argparse.ArgumentParser(description='Program description.')
 args.add_argument('-a','--address', default='train.csv', help='the address of the file to be process')
 args = args.parse_args()
 
+
+
+
 def read_data(address):
-    df=pd.read_csv(address)
-    #only need the tweet content for this task
-    df.drop(columns=['id', 'keyword', 'location', 'target'], axis=1)
-    #remove symbols
-    df['text']=df['text'].map(lambda x: re.sub('\Z','',x))
-    df['text'].str.lower()
-    content=','.join(list(df['text'].values))
+    df=preprocessing.as_list(address)
+    #only need the cleaned tweet content for this task
+    df.drop(columns=['id', 'keyword', 'location', 'text'], axis=1)
+    disaster_content=[]
+    nondisaster_content=[]
+    for index, row in df.iterrows():
+        temp=' '.join(row['text_list'])
+        if row['target']==1:
+            disaster_content.append(temp)
+        else:
+            nondisaster_content.append(temp)
     #tokenize the tweets
-    content_token = word_tokenize(content)
-    filtered_content=[]
-    for w in content_token:
-        if w not in stop_words:
-            filtered_content.append(w)
-    filtered_tweet=','.join(filtered_content)
+    disaster_token = word_tokenize(','.join(disaster_content))
+    nondisaster_token = word_tokenize(','.join(nondisaster_content))
+    disaster_tweet=','.join(disaster_token)
+    nondisaster_tweet=','.join(nondisaster_token)
     wordcloud=WordCloud(background_color="white", max_words=5000, contour_width=3, 
                         contour_color='steelblue')
-    wordcloud.generate(filtered_tweet)
-    wordcloud.to_file('wordcloud.png')
+    wordcloud.generate(disaster_tweet)
+    wordcloud.to_file('disasterwordcloud.png')
+    wordcloud.generate(nondisaster_tweet)
+    wordcloud.to_file('nondisasterwordcloud.png')
 
 def main():
     read_data(args.address)
