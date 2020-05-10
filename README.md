@@ -15,7 +15,7 @@ Arguements are avaliable to use for some of the scripts. Default values are set 
 - lstm
 
 ###### Files should include:
-- preprocessing.py     The python script that does preprocessing of the dataset.
+- preprocessing.py     &nbsp;&nbsp;&nbsp;The python script that does preprocessing of the dataset.
 - classification.py    The classification models of this project.
 - topic_modeling.py    The python script that does topic modeling and visualization.
 - word_cloud.py        The python script that draws word clouds of the text in the dataset.
